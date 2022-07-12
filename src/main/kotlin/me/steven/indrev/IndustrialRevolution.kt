@@ -22,7 +22,7 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
-import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback
+import net.fabricmc.fabric.api.loot.v2.LootTableEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes
 import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper
@@ -55,7 +55,7 @@ object IndustrialRevolution : ModInitializer {
         WorldGeneration.init()
         WorldGeneration.addFeatures()
 
-        LootTableLoadingCallback.EVENT.register(IRLootTableCallback)
+        LootTableEvents.MODIFY.register(IRLootTableCallback)
 
         MachineRegistry
 
@@ -149,8 +149,8 @@ object IndustrialRevolution : ModInitializer {
     val LASER_SOUND_EVENT = SoundEvent(LASER_SOUND_ID)
     val LASER_PARTICLE = FabricParticleTypes.simple()
 
-    val FAKE_PLAYER_BUILDER = FakePlayerBuilder(identifier("default_fake_player")) { builder, server, world, profile ->
-        object : FakeServerPlayer(builder, server, world, profile) {
+    val FAKE_PLAYER_BUILDER = FakePlayerBuilder(identifier("default_fake_player")) { builder, server, world, profile, publicKey ->
+        object : FakeServerPlayer(builder, server, world, profile, publicKey) {
             override fun isCreative(): Boolean = false
             override fun isSpectator(): Boolean = false
             override fun playSound(sound: SoundEvent?, volume: Float, pitch: Float) {}

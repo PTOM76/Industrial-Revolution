@@ -37,7 +37,7 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
 
     var cooldown = 0.0
     override var range = 5
-    private val fakePlayer by lazy { IndustrialRevolution.FAKE_PLAYER_BUILDER.create(world!!.server, world as ServerWorld, "slaughter") }
+    private val fakePlayer by lazy { IndustrialRevolution.FAKE_PLAYER_BUILDER.create(world!!.server, world as ServerWorld, "slaughter", null) }
 
     override fun machineTick() {
         if (world?.isClient == true) return

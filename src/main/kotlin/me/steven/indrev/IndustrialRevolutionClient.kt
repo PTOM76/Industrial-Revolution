@@ -30,7 +30,6 @@ import me.steven.indrev.registry.*
 import me.steven.indrev.events.client.IRWorldRenderer
 import me.steven.indrev.utils.identifier
 import net.fabricmc.api.ClientModInitializer
-import net.fabricmc.fabric.api.`object`.builder.v1.client.model.FabricModelPredicateProviderRegistry
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
@@ -43,8 +42,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback
+import net.minecraft.client.gui.screen.ingame.HandledScreens
+import net.minecraft.client.item.ModelPredicateProviderRegistry
 import net.minecraft.client.option.KeyBinding
 import net.minecraft.client.particle.FlameParticle
 import net.minecraft.client.render.RenderLayer
@@ -115,9 +115,9 @@ object IndustrialRevolutionClient : ClientModInitializer {
             SOLAR_POWER_PLANT_TOWER_HANDLER,
             DATA_CARD_WRITER_HANDLER
         ).forEach { handler ->
-            ScreenRegistry.register(handler) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
+            HandledScreens.register(handler) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
         }
-        ScreenRegistry.register(PIPE_FILTER_HANDLER) { controller, inv, _ -> PipeFilterScreen(controller, inv.player) }
+        HandledScreens.register(PIPE_FILTER_HANDLER) { controller, inv, _ -> PipeFilterScreen(controller, inv.player) }
 
         MachineRegistry.CHOPPER_REGISTRY.registerBlockEntityRenderer(::ChopperBlockEntityRenderer)
         MachineRegistry.RANCHER_REGISTRY.registerBlockEntityRenderer(::AOEMachineBlockEntityRenderer)
@@ -162,16 +162,16 @@ object IndustrialRevolutionClient : ClientModInitializer {
         ModelLoadingRegistry.INSTANCE.registerModelProvider(IRModelManagers)
         ModelLoadingRegistry.INSTANCE.registerVariantProvider { IRModelManagers }
 
-        FabricModelPredicateProviderRegistry.register(
+        ModelPredicateProviderRegistry.register(
             IRItemRegistry.GAMER_AXE_ITEM,
             identifier("activate")
         ) { stack, _, _, _ -> stack?.orCreateNbt?.getFloat("Progress") ?: 0f }
 
-        FabricModelPredicateProviderRegistry.register(IRItemRegistry.REINFORCED_ELYTRA, identifier("broken")) { stack, _, _, _ ->
+        ModelPredicateProviderRegistry.register(IRItemRegistry.REINFORCED_ELYTRA, identifier("broken")) { stack, _, _, _ ->
             if (ElytraItem.isUsable(stack)) 0.0f else 1.0f
         }
 
-        FabricModelPredicateProviderRegistry.register(IRItemRegistry.ORE_DATA_CARD, identifier("empty")) { stack, _, _, _ ->
+        ModelPredicateProviderRegistry.register(IRItemRegistry.ORE_DATA_CARD, identifier("empty")) { stack, _, _, _ ->
             if (OreDataCards.readNbt(stack) == null) 0.0f else 1.0f
         }
 

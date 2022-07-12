@@ -37,7 +37,7 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
     var cooldown = 0.0
     override var range = 5
-    private val fakePlayer by lazy { IndustrialRevolution.FAKE_PLAYER_BUILDER.create(world!!.server, world as ServerWorld, "rancher") }
+    private val fakePlayer by lazy { IndustrialRevolution.FAKE_PLAYER_BUILDER.create(world!!.server, world as ServerWorld, "rancher", null) }
     var feedBabies: Boolean by autosync(FEED_BABIES_ID, true)
     var mateAdults: Boolean by autosync(MATE_ADULTS, true)
     var matingLimit: Int by autosync(MATING_LIMIT, 16)
